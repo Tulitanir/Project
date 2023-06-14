@@ -1,6 +1,6 @@
 package edu.nechaev.project.security;
 
-import edu.nechaev.project.models.Role;
+import edu.nechaev.project.models.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -49,9 +49,9 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String email, List<Role> roleList) {
+    public String createToken(String email, List<MemberRole> memberRoleList) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("roles", roleList.stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("roles", memberRoleList.stream().map(MemberRole::getName).collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -64,9 +64,9 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String createRefreshToken(String email, List<Role> roleList) {
+    public String createRefreshToken(String email, List<MemberRole> memberRoleList) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("roles", roleList.stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("roles", memberRoleList.stream().map(MemberRole::getName).collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + refreshTokenValidityInMilliseconds);

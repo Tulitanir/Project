@@ -1,7 +1,7 @@
 package edu.nechaev.project.security;
 
 import edu.nechaev.project.models.Member;
-import edu.nechaev.project.models.Role;
+import edu.nechaev.project.models.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,19 +14,18 @@ public final class JwtUserFactory {
                 member.getId(),
                 member.getName(),
                 member.getSurname(),
-                member.getPatronymic(),
                 member.getPhone(),
-                member.getPfpPath(),
+                member.getImage(),
                 member.getEmail(),
                 member.getPassword(),
-                mapToGrantedAuthorities(member.getRoles()),
+                mapToGrantedAuthorities(member.getMemberRoles()),
                 member.isActive()
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> roles) {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<MemberRole> memberRoles) {
+        return memberRoles.stream()
+                .map(memberRole -> new SimpleGrantedAuthority(memberRole.getName()))
                 .collect(Collectors.toList());
     }
 }

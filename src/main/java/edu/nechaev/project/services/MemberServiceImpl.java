@@ -1,5 +1,6 @@
 package edu.nechaev.project.services;
 
+import edu.nechaev.project.dto.AuthenticationResponse;
 import edu.nechaev.project.models.Member;
 import edu.nechaev.project.dto.Role;
 import edu.nechaev.project.dto.RoleBinding;
@@ -10,34 +11,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
-    private final RoleRepository roleRepository;
-    private final RoleBindingRepository roleBindingRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Override
-    @Transactional
-    public Member register(Member member) {
-        if (findByEmail(member.getEmail()) != null)
-            throw new RuntimeException("Пользователь уже зарегистрирован");
-
-        member.setActive(true);
-        member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
-
-        Member res = memberRepository.save(member);
-        Role role = roleRepository.findByName("member");
-        RoleBinding roleBinding = new RoleBinding();
-        roleBinding.setMember(res.getId());
-        roleBinding.setRole(role.getId());
-        roleBindingRepository.save(roleBinding);
-
-        return res;
-    }
 
     @Override
     public List<Member> getAll() {
@@ -47,6 +35,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findById(int id) {
         return memberRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public String getImage(int id) {
+        return memberRepository.findImageById(id).orElseThrow(RuntimeException::new);
     }
 
     @Override

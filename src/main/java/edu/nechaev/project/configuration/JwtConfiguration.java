@@ -28,7 +28,7 @@ public class JwtConfiguration {
                 .configurationSource(cors -> configuration())
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/news/**", "/api/member")
+                .requestMatchers("/api/auth/**", "/api/news/**", "/api/member", "/api/image")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

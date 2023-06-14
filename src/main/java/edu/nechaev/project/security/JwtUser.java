@@ -1,25 +1,20 @@
 package edu.nechaev.project.security;
 
-import edu.nechaev.project.models.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 public class JwtUser implements UserDetails {
     private final int id;
-    private final String name, surname, patronymic, phone, pfpPath, email, password;
+    private final String name, surname, phone, pfpPath, email, password;
     private final Collection<GrantedAuthority> grantedAuthorities;
     private final boolean isActive;
 
-    public JwtUser(int id, String name, String surname, String patronymic, String phone, String pfpPath, String email, String password, Collection<GrantedAuthority> grantedAuthorities, boolean isActive) {
+    public JwtUser(int id, String name, String surname, String phone, String pfpPath, String email, String password, Collection<GrantedAuthority> grantedAuthorities, boolean isActive) {
         this.id = id;
         this.name = name;
         this.surname = surname;
-        this.patronymic = patronymic;
         this.phone = phone;
         this.pfpPath = pfpPath;
         this.email = email;
@@ -30,7 +25,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return grantedAuthorities;
     }
 
     @Override
@@ -73,10 +68,6 @@ public class JwtUser implements UserDetails {
 
     public String getSurname() {
         return surname;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
     }
 
     public String getPhone() {
