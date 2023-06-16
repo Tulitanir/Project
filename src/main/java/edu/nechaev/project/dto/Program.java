@@ -1,4 +1,4 @@
-package edu.nechaev.project.models;
+package edu.nechaev.project.dto;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

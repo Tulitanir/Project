@@ -1,5 +1,6 @@
-package edu.nechaev.project.models;
+package edu.nechaev.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -7,11 +8,13 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.sql.Timestamp;
 
 @Data
-@Table("view_comments")
-public class Comment {
+@Table("comment")
+public class CommentPost {
     @Id
     private int id;
     private int memberId, newsId;
-    private String name, surname, text;
+    private String text;
+    private boolean isChanged;
+    @JsonIgnore
     private Timestamp time;
 }

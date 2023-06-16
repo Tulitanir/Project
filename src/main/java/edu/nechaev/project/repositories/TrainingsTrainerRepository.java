@@ -1,9 +1,9 @@
 package edu.nechaev.project.repositories;
 
-import edu.nechaev.project.models.Place;
+import edu.nechaev.project.dto.TrainingsTrainer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlaceRepository extends CrudRepository<Place, Integer> {
+public interface TrainingsTrainerRepository extends CrudRepository<TrainingsTrainer,Integer> {
 }

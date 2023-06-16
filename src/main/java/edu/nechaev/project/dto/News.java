@@ -1,17 +1,18 @@
-package edu.nechaev.project.models;
+package edu.nechaev.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.sql.Time;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Table
 @Data
-public class PersonalTraining {
+public class News {
     @Id
     private int id;
-    private int trainerId, memberId;
+    private String title, text;
     private Timestamp date;
 }

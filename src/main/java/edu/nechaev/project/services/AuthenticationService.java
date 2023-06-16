@@ -1,15 +1,14 @@
 package edu.nechaev.project.services;
 
-import edu.nechaev.project.dto.AuthenticationRequest;
-import edu.nechaev.project.dto.AuthenticationResponse;
-import edu.nechaev.project.dto.Role;
-import edu.nechaev.project.dto.RoleBinding;
-import edu.nechaev.project.models.Member;
-import edu.nechaev.project.models.MemberRole;
+import edu.nechaev.project.dto.*;
+import edu.nechaev.project.repositories.RefreshStorageRepository;
 import edu.nechaev.project.repositories.RoleBindingRepository;
 import edu.nechaev.project.repositories.RoleRepository;
+import edu.nechaev.project.security.AccessToken;
 import edu.nechaev.project.security.JwtTokenProvider;
+import edu.nechaev.project.security.TokenExpiredException;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +34,8 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final RoleBindingRepository roleBindingRepository;
     private PasswordEncoder bCryptPasswordEncoder;
+    private RefreshStorageRepository refreshStorageRepository;
+
     public AuthenticationResponse login(AuthenticationRequest request) {
         try {
             String email = request.getEmail();
@@ -45,10 +46,11 @@ public class AuthenticationService {
                 throw new UsernameNotFoundException("Пользователя с email: " + email + " не существует");
             }
 
-            String token = jwtTokenProvider.createToken(email, member.getMemberRoles());
+            AccessToken token = jwtTokenProvider.createToken(email, member.getMemberRoles());
             String refreshToken = jwtTokenProvider.createRefreshToken(email, member.getMemberRoles());
+            refreshStorageRepository.save(new RefreshStorage(member.getEmail(), refreshToken));
 
-            return new AuthenticationResponse(member, token, refreshToken);
+            return new AuthenticationResponse(member, token.getToken(), refreshToken, token.getExpiresIn());
         } catch (AuthenticationException exception) {
             throw new BadCredentialsException("Неверный email или пароль");
         }
@@ -97,10 +99,32 @@ public class AuthenticationService {
         memberRole.setName("member");
         res.getMemberRoles().add(memberRole);
 
-        String token = jwtTokenProvider.createToken(res.getEmail(), res.getMemberRoles());
+        AccessToken token = jwtTokenProvider.createToken(res.getEmail(), res.getMemberRoles());
         String refreshToken = jwtTokenProvider.createRefreshToken(res.getEmail(), res.getMemberRoles());
 
-        return new AuthenticationResponse(res, token, refreshToken);
+        refreshStorageRepository.save(new RefreshStorage(res.getEmail(), refreshToken));
+
+        return new AuthenticationResponse(res, token.getToken(), refreshToken, token.getExpiresIn());
     }
 
+    public AuthenticationResponse refreshToken(@NonNull String refreshToken) {
+        if (jwtTokenProvider.validateToken(refreshToken)) {
+            String email = jwtTokenProvider.getUsername(refreshToken);
+            String saveRefreshToken = refreshStorageRepository
+                    .findById(email)
+                    .orElseThrow(TokenExpiredException::new)
+                    .getRefreshToken();
+            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
+                Member member = memberService.findByEmail(email);
+                if (member == null) {
+                    throw new UsernameNotFoundException("Пользователь с email: " + email + " не существует");
+                }
+                AccessToken accessToken = jwtTokenProvider.createToken(email, member.getMemberRoles());
+                String refrToken = jwtTokenProvider.createRefreshToken(email, member.getMemberRoles());
+                refreshStorageRepository.save(new RefreshStorage(email, refrToken));
+                return new AuthenticationResponse(member, accessToken.getToken(), refrToken, accessToken.getExpiresIn());
+            }
+        }
+        throw new TokenExpiredException("Конец");
+    }
 }

@@ -1,7 +1,7 @@
 package edu.nechaev.project.security;
 
-import edu.nechaev.project.models.Member;
-import edu.nechaev.project.models.MemberRole;
+import edu.nechaev.project.dto.Member;
+import edu.nechaev.project.dto.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

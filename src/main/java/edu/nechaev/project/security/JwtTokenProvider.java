@@ -1,6 +1,6 @@
 package edu.nechaev.project.security;
 
-import edu.nechaev.project.models.MemberRole;
+import edu.nechaev.project.dto.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -49,19 +49,20 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String email, List<MemberRole> memberRoleList) {
+    public AccessToken createToken(String email, List<MemberRole> memberRoleList) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", memberRoleList.stream().map(MemberRole::getName).collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()
+        return new AccessToken(Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(getSignKey())
-                .compact();
+                .compact(),
+                validity.getTime());
     }
 
     public String createRefreshToken(String email, List<MemberRole> memberRoleList) {
@@ -94,9 +95,9 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7);
+        String bearerToken = request.getHeader("Authentication");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring("Bearer ".length());
         }
         return null;
     }
@@ -107,7 +108,7 @@ public class JwtTokenProvider {
                     .setSigningKey(getSignKey())
                     .build().parseClaimsJws(token);
 
-            return claimsJws.getBody().getExpiration().before(new Date());
+            return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException exception) {
             throw new RuntimeException("JWT невалиден", exception);
         }

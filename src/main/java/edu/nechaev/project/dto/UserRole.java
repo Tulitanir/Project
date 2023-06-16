@@ -1,13 +1,12 @@
-package edu.nechaev.project.models;
+package edu.nechaev.project.dto;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table
 @Data
-public class Place {
-    @Id
+@Table("user_role")
+public class UserRole {
     private int id;
-    private String name, description;
+    private String name, surname, role;
 }

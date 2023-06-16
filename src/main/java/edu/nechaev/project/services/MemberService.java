@@ -1,20 +1,43 @@
 package edu.nechaev.project.services;
 
-import edu.nechaev.project.dto.AuthenticationResponse;
-import edu.nechaev.project.models.Member;
-import org.springframework.web.multipart.MultipartFile;
+import edu.nechaev.project.dto.Member;
+import edu.nechaev.project.dto.UserRole;
+import edu.nechaev.project.repositories.MemberRepository;
+import edu.nechaev.project.repositories.UserRoleRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface MemberService {
-    List<Member> getAll();
+@Service
+@AllArgsConstructor
+public class MemberService {
+    private final MemberRepository memberRepository;
+    private final UserRoleRepository userRoleRepository;
+    public List<Member> getAll() {
+        return (List<Member>) memberRepository.findAll();
+    }
+    public Member findById(int id) {
+        return memberRepository.findById(id).orElse(null);
+    }
 
-    Member findById(int id);
-    Member save(Member member);
+    public Iterable<UserRole> findByRole(String role) {
+        return userRoleRepository.findByRole(role);
+    }
 
-    String getImage(int id);
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
 
-    Member findByEmail(String email);
+    public String getImage(int id) {
+        return memberRepository.findImageById(id).orElseThrow(RuntimeException::new);
+    }
 
-    void delete(int id);
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElse(null);
+    }
+
+    public void delete(int id) {
+        memberRepository.deleteById(id);
+    }
 }

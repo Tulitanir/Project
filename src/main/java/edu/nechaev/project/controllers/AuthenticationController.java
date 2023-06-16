@@ -2,7 +2,9 @@ package edu.nechaev.project.controllers;
 
 import edu.nechaev.project.dto.AuthenticationRequest;
 import edu.nechaev.project.dto.AuthenticationResponse;
-import edu.nechaev.project.models.Member;
+import edu.nechaev.project.dto.Member;
+import edu.nechaev.project.dto.RefreshTokenRequest;
+import edu.nechaev.project.security.TokenExpiredException;
 import edu.nechaev.project.services.AuthenticationService;
 import edu.nechaev.project.services.MemberService;
 import jakarta.annotation.Nullable;
@@ -30,13 +32,7 @@ public class AuthenticationController {
                                            @RequestPart("image") @Nullable MultipartFile image) {
         return ResponseEntity.ok(
                 authenticationService.register(
-                        Member.builder()
-                                .name(name)
-                                .surname(surname)
-                                .phone(phone)
-                                .email(email)
-                                .password(password)
-                                .build(),
+                        new Member(name, surname, phone, email, password),
                         image)
         );
     }
@@ -45,9 +41,19 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(request));
     }
 
+    @PostMapping("/refreshToken")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authenticationService.refreshToken(request.getRefreshToken()));
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handle(AuthenticationException authenticationException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authenticationException.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<String> handle(TokenExpiredException authenticationException) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authenticationException.getLocalizedMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
