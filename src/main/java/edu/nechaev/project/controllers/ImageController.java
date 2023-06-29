@@ -1,14 +1,11 @@
 package edu.nechaev.project.controllers;
 
-import edu.nechaev.project.dto.ImageRequest;
 import edu.nechaev.project.services.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -20,10 +17,10 @@ import java.nio.file.Paths;
 @RequestMapping("/api/image")
 @AllArgsConstructor
 public class ImageController {
-    private MemberService memberService;
+    private MemberService memberServiceImpl;
     @GetMapping
     public ResponseEntity<byte[]> getImage(@RequestParam long id) throws IOException {
-        String imagePath = memberService.getImage(id);
+        String imagePath = memberServiceImpl.getImage(id);
         Path path = Paths.get(imagePath);
 
         byte[] imageBytes = Files.readAllBytes(path);

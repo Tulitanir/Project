@@ -18,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
-    private final MemberService memberService;
+    private final AuthenticationService authenticationServiceImpl;
+    private final MemberService memberServiceImpl;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestPart("name") String name,
@@ -29,19 +29,19 @@ public class AuthenticationController {
                                            @RequestPart("password") String password,
                                            @RequestPart("image") @Nullable MultipartFile image) {
         return ResponseEntity.ok(
-                authenticationService.register(
+                authenticationServiceImpl.register(
                         new MemberPost(name, surname, phone, email, password),
                         image)
         );
     }
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authenticationService.login(request));
+        return ResponseEntity.ok(authenticationServiceImpl.login(request));
     }
 
     @PostMapping("/refreshToken")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authenticationService.refreshToken(request.getRefreshToken()));
+        return ResponseEntity.ok(authenticationServiceImpl.refreshToken(request.getRefreshToken()));
     }
 
     @ExceptionHandler(AuthenticationException.class)

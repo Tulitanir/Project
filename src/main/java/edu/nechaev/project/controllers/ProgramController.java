@@ -16,43 +16,43 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/program")
 @AllArgsConstructor
 public class ProgramController {
-    private final ProgramService programService;
+    private final ProgramService programServiceImpl;
     @GetMapping("/getAll")
     public ResponseEntity<Iterable<Program>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(programService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(programServiceImpl.getAll());
     }
 
     @PostMapping("/addProgram")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Program> addProgram(@RequestBody Program program) {
-        return ResponseEntity.ok(programService.addProgram(program));
+        return ResponseEntity.ok(programServiceImpl.addProgram(program));
     }
 
     @GetMapping("/getTrainings")
     public ResponseEntity<Iterable<TrainingsTrainer>> getTrainings() {
-        return ResponseEntity.ok(programService.getTrainings());
+        return ResponseEntity.ok(programServiceImpl.getTrainings());
     }
 
     @GetMapping("/getTrainingsByTrainerId")
     public ResponseEntity<Iterable<TrainingsTrainer>> getTrainingsByTrainerId(@RequestParam long id) {
-        return ResponseEntity.ok(programService.trainingsTrainers(id));
+        return ResponseEntity.ok(programServiceImpl.trainingsTrainers(id));
     }
 
     @GetMapping("/getTrainingsByMemberId")
     public ResponseEntity<Iterable<TrainingsTrainer>> getTrainingsByMemberId(@RequestParam long id) {
-        return ResponseEntity.ok(programService.findByMember(id));
+        return ResponseEntity.ok(programServiceImpl.findByMember(id));
     }
 
     @PostMapping("/addTraining")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Training> addTraining(@RequestBody Training training) {
-        return ResponseEntity.ok(programService.addTraining(training));
+        return ResponseEntity.ok(programServiceImpl.addTraining(training));
     }
 
     @PostMapping("/signUp")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Boolean> signUp(@RequestBody TrainingSignUpRequest trainingSignUpRequest) {
-        return ResponseEntity.ok(programService.signUp(trainingSignUpRequest.getMemberId(), trainingSignUpRequest.getTrainingId()));
+        return ResponseEntity.ok(programServiceImpl.signUp(trainingSignUpRequest.getMemberId(), trainingSignUpRequest.getTrainingId()));
     }
 
 

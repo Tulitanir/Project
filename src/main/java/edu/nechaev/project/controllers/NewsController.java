@@ -14,51 +14,51 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/api/news")
 public class NewsController {
-    private NewsService newsService;
+    private NewsService newsServiceImpl;
     @GetMapping("/getAll")
     public ResponseEntity<Iterable<News>> getNews() {
-        return ResponseEntity.ok(newsService.getNews());
+        return ResponseEntity.ok(newsServiceImpl.getNews());
     }
 
     @PostMapping("/addNews")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<News> addNews(@RequestBody UpdateNewsRequest updateNewsRequest) {
-        return ResponseEntity.ok(newsService.addNews(updateNewsRequest));
+        return ResponseEntity.ok(newsServiceImpl.addNews(updateNewsRequest));
     }
 
     @GetMapping("/getComments")
     public ResponseEntity<Iterable<Comment>> getCommentsByNewsId(@RequestParam long id) {
-        return ResponseEntity.ok(newsService.getCommentsByNewsId(id));
+        return ResponseEntity.ok(newsServiceImpl.getCommentsByNewsId(id));
     }
 
     @DeleteMapping("/deleteNews")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Boolean> deleteNews(@RequestParam long id) {
-        return ResponseEntity.ok(newsService.deleteNews(id));
+        return ResponseEntity.ok(newsServiceImpl.deleteNews(id));
     }
 
     @PostMapping("/addComment")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Iterable<Comment>> addComment(@RequestBody CommentPost commentPost) {
-        return ResponseEntity.ok().body(newsService.addComment(commentPost));
+        return ResponseEntity.ok().body(newsServiceImpl.addComment(commentPost));
     }
 
     @DeleteMapping("/deleteComment")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Boolean> deleteComment(@RequestParam long id) {
-        return ResponseEntity.ok(newsService.deleteComment(id));
+        return ResponseEntity.ok(newsServiceImpl.deleteComment(id));
     }
 
     @PutMapping("/updateComment")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Boolean> updateComment(@RequestBody UpdateCommentRequest updateCommentRequest) {
-        return ResponseEntity.ok(newsService.updateComment(updateCommentRequest.getId(), updateCommentRequest.getText()));
+        return ResponseEntity.ok(newsServiceImpl.updateComment(updateCommentRequest.getId(), updateCommentRequest.getText()));
     }
 
     @PutMapping("/updateNews")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<News> updateNews(@RequestBody UpdateNewsRequest updateCommentRequest) {
-        return ResponseEntity.ok(newsService.updateNews(updateCommentRequest.getId(), updateCommentRequest.getTitle(), updateCommentRequest.getText()));
+        return ResponseEntity.ok(newsServiceImpl.updateNews(updateCommentRequest.getId(), updateCommentRequest.getTitle(), updateCommentRequest.getText()));
     }
 
 
