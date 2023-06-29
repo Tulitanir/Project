@@ -10,9 +10,12 @@ import java.sql.Date;
 @Data
 @Table("training_trainer")
 public class TrainingsTrainer {
-    private int id;
+    @Id
+    private long id;
+    private long trainer, capacity;
     private String name, surname, title;
-    private int capacity;
+    @Column("member_count")
+    private long memberCount;
     private Date date;
     @Column("beginning")
     private String beg;

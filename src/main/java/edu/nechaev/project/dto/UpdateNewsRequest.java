@@ -3,7 +3,7 @@ package edu.nechaev.project.dto;
 import lombok.Data;
 
 @Data
-public class UpdateCommentRequest {
+public class UpdateNewsRequest {
     private long id;
-    private String text;
+    private String title, text;
 }

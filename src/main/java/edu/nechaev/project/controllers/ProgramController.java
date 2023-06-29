@@ -2,6 +2,7 @@ package edu.nechaev.project.controllers;
 
 import edu.nechaev.project.dto.Program;
 import edu.nechaev.project.dto.Training;
+import edu.nechaev.project.dto.TrainingSignUpRequest;
 import edu.nechaev.project.dto.TrainingsTrainer;
 import edu.nechaev.project.services.ProgramService;
 import lombok.AllArgsConstructor;
@@ -32,10 +33,26 @@ public class ProgramController {
         return ResponseEntity.ok(programService.getTrainings());
     }
 
+    @GetMapping("/getTrainingsByTrainerId")
+    public ResponseEntity<Iterable<TrainingsTrainer>> getTrainingsByTrainerId(@RequestParam long id) {
+        return ResponseEntity.ok(programService.trainingsTrainers(id));
+    }
+
+    @GetMapping("/getTrainingsByMemberId")
+    public ResponseEntity<Iterable<TrainingsTrainer>> getTrainingsByMemberId(@RequestParam long id) {
+        return ResponseEntity.ok(programService.findByMember(id));
+    }
+
     @PostMapping("/addTraining")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Training> addTraining(@RequestBody Training training) {
         return ResponseEntity.ok(programService.addTraining(training));
+    }
+
+    @PostMapping("/signUp")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Boolean> signUp(@RequestBody TrainingSignUpRequest trainingSignUpRequest) {
+        return ResponseEntity.ok(programService.signUp(trainingSignUpRequest.getMemberId(), trainingSignUpRequest.getTrainingId()));
     }
 
 
@@ -50,7 +67,7 @@ public class ProgramController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> habdle(RuntimeException runtimeException) {
+    public ResponseEntity<String> handle(RuntimeException runtimeException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(runtimeException.getLocalizedMessage());
     }
 }

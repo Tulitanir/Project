@@ -1,14 +1,12 @@
 package edu.nechaev.project.controllers;
 
-import edu.nechaev.project.dto.AuthenticationRequest;
-import edu.nechaev.project.dto.AuthenticationResponse;
-import edu.nechaev.project.dto.Member;
-import edu.nechaev.project.dto.RefreshTokenRequest;
+import edu.nechaev.project.dto.*;
 import edu.nechaev.project.security.TokenExpiredException;
 import edu.nechaev.project.services.AuthenticationService;
 import edu.nechaev.project.services.MemberService;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -32,7 +30,7 @@ public class AuthenticationController {
                                            @RequestPart("image") @Nullable MultipartFile image) {
         return ResponseEntity.ok(
                 authenticationService.register(
-                        new Member(name, surname, phone, email, password),
+                        new MemberPost(name, surname, phone, email, password),
                         image)
         );
     }
@@ -48,7 +46,13 @@ public class AuthenticationController {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handle(AuthenticationException authenticationException) {
+        authenticationException.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authenticationException.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(RedisConnectionFailureException.class)
+    public ResponseEntity<String> handle(RedisConnectionFailureException authenticationException) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(authenticationException.getLocalizedMessage());
     }
 
     @ExceptionHandler(TokenExpiredException.class)

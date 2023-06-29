@@ -13,8 +13,9 @@ import java.time.LocalTime;
 @Table("trainings")
 public class Training {
     @Id
-    private int id;
-    private int program, trainer, capacity;
+    private long id;
+    private long program, trainer;
+    private short capacity;
     private Date date;
     @Transient
     private String beg, ending;

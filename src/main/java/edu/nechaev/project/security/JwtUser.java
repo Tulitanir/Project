@@ -6,12 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class JwtUser implements UserDetails {
-    private final int id;
+    private final long id;
     private final String name, surname, phone, pfpPath, email, password;
     private final Collection<GrantedAuthority> grantedAuthorities;
     private final boolean isActive;
 
-    public JwtUser(int id, String name, String surname, String phone, String pfpPath, String email, String password, Collection<GrantedAuthority> grantedAuthorities, boolean isActive) {
+    public JwtUser(long id, String name, String surname, String phone, String pfpPath, String email, String password, Collection<GrantedAuthority> grantedAuthorities, boolean isActive) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -58,7 +58,7 @@ public class JwtUser implements UserDetails {
         return isActive;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

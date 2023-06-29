@@ -1,13 +1,16 @@
 package edu.nechaev.project.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+@Table
 @Data
-@Table("role")
-public class Role {
+@Builder
+public class MemberTraining {
     @Id
     private long id;
-    private String name;
+    private long training, member;
 }

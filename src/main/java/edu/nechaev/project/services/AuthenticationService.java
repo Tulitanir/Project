@@ -1,6 +1,7 @@
 package edu.nechaev.project.services;
 
 import edu.nechaev.project.dto.*;
+import edu.nechaev.project.repositories.MemberPostRepository;
 import edu.nechaev.project.repositories.RefreshStorageRepository;
 import edu.nechaev.project.repositories.RoleBindingRepository;
 import edu.nechaev.project.repositories.RoleRepository;
@@ -35,6 +36,7 @@ public class AuthenticationService {
     private final RoleBindingRepository roleBindingRepository;
     private PasswordEncoder bCryptPasswordEncoder;
     private RefreshStorageRepository refreshStorageRepository;
+    private final MemberPostRepository memberPostRepository;
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         try {
@@ -56,12 +58,14 @@ public class AuthenticationService {
         }
     }
     @Transactional
-    public AuthenticationResponse register(Member member, MultipartFile multipartFile) {
+    public AuthenticationResponse register(MemberPost member, MultipartFile multipartFile) {
         if (memberService.findByEmail(member.getEmail()) != null)
             throw new RuntimeException("Пользователь уже зарегистрирован");
 
         member.setActive(true);
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
+
+        String imagePath = null;
 
         if (multipartFile != null) {
             String filePath = "D:\\Project\\pfps\\" + member.getEmail() + ".jpg";
@@ -85,13 +89,16 @@ public class AuthenticationService {
                 throw new RuntimeException(e.getLocalizedMessage());
             }
 
-            member.setImage(filePath);
+            imagePath = filePath;
+            member.setImage(imagePath);
         }
 
-        Member res = memberService.save(member);
+        MemberPost res2 = memberPostRepository.save(member);
+        Member res = new Member(res2.getId(), res2.getName(), res2.getSurname(), res2.getPhone(), res2.getEmail(), res2.getPassword());
+        res.setImage(imagePath);
         Role role = roleRepository.findByName("member");
         RoleBinding roleBinding = new RoleBinding();
-        roleBinding.setMember(res.getId());
+        roleBinding.setMember(res2.getId());
         roleBinding.setRole(role.getId());
         roleBindingRepository.save(roleBinding);
 

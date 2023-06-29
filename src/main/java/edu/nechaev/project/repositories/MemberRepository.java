@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 @EnableJdbcRepositories
-public interface MemberRepository extends CrudRepository<Member, Integer> {
+public interface MemberRepository extends CrudRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
     @Query("SELECT image FROM member WHERE id = :id")
-    Optional<String> findImageById(int id);
+    Optional<String> findImageById(long id);
 }

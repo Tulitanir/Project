@@ -9,6 +9,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 public class Program {
     @Id
-    int id;
+    long id;
     String name, description;
 }

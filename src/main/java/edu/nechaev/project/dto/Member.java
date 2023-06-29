@@ -7,15 +7,16 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table
+@Table("member_subscription")
 @Data
 @NoArgsConstructor
 public class Member {
     @Id
-    private int id;
+    private long id;
     private String name, surname, phone, image, email;
     @JsonIgnore
     private String password;
@@ -23,8 +24,18 @@ public class Member {
     @MappedCollection(idColumn = "member", keyColumn = "role_id")
     private List<MemberRole> memberRoles = new ArrayList<>();
     private boolean isActive;
+    private Timestamp expirationDate;
 
     public Member(String name, String surname, String phone, String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member(long id, String name, String surname, String phone, String email, String password) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.phone = phone;

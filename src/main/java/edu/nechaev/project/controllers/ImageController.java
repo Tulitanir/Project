@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 public class ImageController {
     private MemberService memberService;
     @GetMapping
-    public ResponseEntity<byte[]> getImage(@RequestParam int id) throws IOException {
+    public ResponseEntity<byte[]> getImage(@RequestParam long id) throws IOException {
         String imagePath = memberService.getImage(id);
         Path path = Paths.get(imagePath);
 

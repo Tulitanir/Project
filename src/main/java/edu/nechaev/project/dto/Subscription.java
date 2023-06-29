@@ -4,10 +4,13 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Date;
+
+@Table
 @Data
-@Table("role")
-public class Role {
+public class Subscription {
     @Id
     private long id;
-    private String name;
+    private long member, option;
+    private Date date;
 }

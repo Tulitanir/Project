@@ -9,6 +9,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table
 public class RoleBinding {
     @Id
-    private int id;
-    private int member, role;
+    private long id;
+    private long member, role;
 }

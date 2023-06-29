@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 @Table("view_comments")
 public class Comment {
     @Id
-    private int id;
-    private int memberId, newsId;
+    private long id;
+    private long memberId, newsId;
     private String name, surname, text;
     private Timestamp time;
     private boolean isChanged;

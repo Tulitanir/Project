@@ -11,8 +11,8 @@ import java.sql.Timestamp;
 @Table("comment")
 public class CommentPost {
     @Id
-    private int id;
-    private int memberId, newsId;
+    private long id;
+    private long memberId, newsId;
     private String text;
     private boolean isChanged;
     @JsonIgnore

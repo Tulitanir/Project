@@ -17,7 +17,7 @@ public class MemberService {
     public List<Member> getAll() {
         return (List<Member>) memberRepository.findAll();
     }
-    public Member findById(int id) {
+    public Member findById(long id) {
         return memberRepository.findById(id).orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public String getImage(int id) {
+    public String getImage(long id) {
         return memberRepository.findImageById(id).orElseThrow(RuntimeException::new);
     }
 
@@ -37,7 +37,7 @@ public class MemberService {
         return memberRepository.findByEmail(email).orElse(null);
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         memberRepository.deleteById(id);
     }
 }
