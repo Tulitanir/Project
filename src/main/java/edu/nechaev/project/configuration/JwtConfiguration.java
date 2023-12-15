@@ -28,7 +28,8 @@ public class JwtConfiguration {
                 .configurationSource(cors -> configuration())
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/news/**", "/api/member/**", "/api/image", "/api/program/**", "/api/subscription/**")
+                .requestMatchers("/api/auth/**", "/api/news/**", "/api/member/**", "/api/image", "/api/program/**", "/api/subscription/**",
+                        "/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

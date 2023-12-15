@@ -12,11 +12,11 @@ public class PostgreSQLConfig {
     @Bean
     public static DataSource getDataSource() {
         PGSimpleDataSource pgSimpleDataSource = new PGSimpleDataSource();
-        pgSimpleDataSource.setKerberosServerName("localhost:5432");
+        pgSimpleDataSource.setKerberosServerName("postgres:5432");
         pgSimpleDataSource.setDatabaseName("FitnessClub");
         pgSimpleDataSource.setCurrentSchema("public");
-        pgSimpleDataSource.setUser("postgres");
-        pgSimpleDataSource.setPassword("197114dD");
+        pgSimpleDataSource.setUser("test");
+        pgSimpleDataSource.setPassword("test");
         return pgSimpleDataSource;
     }
 }
