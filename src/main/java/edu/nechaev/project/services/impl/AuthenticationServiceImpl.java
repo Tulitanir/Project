@@ -12,6 +12,8 @@ import edu.nechaev.project.services.AuthenticationService;
 import edu.nechaev.project.services.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,16 +31,18 @@ import java.io.File;
 import java.io.IOException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberServiceImpl;
     private final RoleRepository roleRepository;
     private final RoleBindingRepository roleBindingRepository;
-    private PasswordEncoder bCryptPasswordEncoder;
-    private RefreshStorageRepository refreshStorageRepository;
+    private final PasswordEncoder bCryptPasswordEncoder;
+    private final RefreshStorageRepository refreshStorageRepository;
     private final MemberPostRepository memberPostRepository;
+    @Value("${pfps.path}")
+    private String pfpPath;
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         try {
@@ -70,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String imagePath = null;
 
         if (multipartFile != null) {
-            String filePath = "D:\\Project\\pfps\\" + member.getEmail() + ".jpg";
+            String filePath = pfpPath + File.separator + member.getEmail() + ".jpg";
 
             File image = new File(filePath);
             try {

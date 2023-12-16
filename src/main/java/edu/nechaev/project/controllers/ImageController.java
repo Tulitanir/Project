@@ -38,10 +38,11 @@ public class ImageController {
 
     @ExceptionHandler(RuntimeException.class)
     @SneakyThrows
-    public ResponseEntity<byte[]> handle(RuntimeException authenticationException) {
-        byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Project\\pfps\\null.jpg"));
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
-                .contentLength(imageBytes.length)
-                .body(imageBytes);
+    public ResponseEntity<String> handle(RuntimeException authenticationException) {
+//        byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Project\\pfps\\null.jpg"));
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG)
+//                .contentLength(imageBytes.length)
+//                .body(imageBytes);
+        return ResponseEntity.notFound().build();
     }
 }
